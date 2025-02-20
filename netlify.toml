@@ -1,5 +1,5 @@
 
 [[redirects]]
-from = "/*"
-to = "/index.html"
+from = "/favs"
+to = "/"
 status = 200
