@@ -1,21 +1,81 @@
-import { movies } from './movies_data';
-import React, { Component } from 'react'
+// import { movies } from './movies_data';
+import React, { Component } from 'react';
+import axios from 'axios';
+import { API_KEY } from  '../api_key';
 
 export default class Movies extends Component {
   constructor() {
     super();
     this.state = {
         hover: '',
-        page_arr: [1]
+        page_arr: [1],
+        curr_page: 1,
+        movies: []
     }
   }
 
+  //  async beause we're making a async external call to fetch trending movies  
+  async componentDidMount() {
+    this.changeMovies();
+  }
+
+  changeMovies = async () => {
+    const getMoviesUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${this.state.curr_page}`;
+    const response = await axios.get(getMoviesUrl);
+    let data = response.data;
+    this.setState({
+        movies: [...data.results]
+    })
+  }
+
+  handleNext = () => {
+    let temp_arr = [];
+    for(let i = 1; i <= this.state.page_arr.length + 1; i++) {
+        temp_arr.push(i);
+    }
+
+    this.setState({
+        page_arr : [...temp_arr],
+        curr_page : this.state.curr_page + 1
+    }, this.changeMovies)
+    // this.changeMovies is passed as callback to setState as setState is async
+    // changeMovies is invoked once state has been state
+  }
+
+  handlePrevious = () => {
+    if(this.state.curr_page === 1)
+        return;
+
+    let temp_arr = [];
+    for(let i = 1; i <this.state.page_arr.length; i++) {
+        temp_arr.push(i);
+    }
+
+    this.setState({
+        page_arr : [...temp_arr],
+        curr_page : this.state.curr_page - 1
+    }, this.changeMovies)
+  }
+
+  handlePage = (page_val) => {
+    if(page_val !== this.state.curr_page) {
+        let temp_arr = [];
+        for(let i = 1; i <= page_val; i++) {
+            temp_arr.push(i);
+        }
+
+        this.setState({
+            curr_page : page_val,
+            page_arr : [...temp_arr]
+        }, this.changeMovies)
+    }
+  }
+ 
   render() {
-    let movie = movies.results;
     return (
       <>
             {
-                movie.length === 0 ? 
+                this.state.movies.length === 0 ? 
                     <div className="text-center">
                         <div className="spinner-border" role="status">
                             <span className="visually-hidden">Loading...</span>
@@ -25,7 +85,7 @@ export default class Movies extends Component {
                         <h1 className='text-center'><strong>Trending</strong></h1>
                         <div className='movies-list'>
                             {
-                                movie.map((m) => (
+                                this.state.movies.map((m) => (
                                     <div className="card movie-card" onMouseEnter={() => this.setState({ hover : m.id })} onMouseLeave={() => this.setState({ hover : "" })}>
                                         <img src={`https://image.tmdb.org/t/p/original${m.backdrop_path}`} className="card-img-top movie-img" alt={m.title} />
                                         {/* <div className="card-body"> */}
@@ -45,13 +105,13 @@ export default class Movies extends Component {
                         <div style={{ display:'flex', justifyContent:'center' }}>
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination"> 
-                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li className="page-item"><a className="page-link" onClick={this.handlePrevious}>Previous</a></li>
                                     {
                                         this.state.page_arr.map((page) => (
-                                            <li class="page-item"><a class="page-link" href="#">{page}</a></li>
+                                            <li className="page-item"><a className="page-link" onClick={() => this.handlePage(page)}>{page}</a></li>
                                         ))
                                     }
-                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                    <li className="page-item"><a className="page-link" onClick={this.handleNext}>Next</a></li>
                                 </ul>
                             </nav>
                         </div>
