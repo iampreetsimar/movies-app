@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { movies } from './movies_data';
 
 export default class Favorites extends Component {
   constructor() {
@@ -188,7 +187,7 @@ export default class Favorites extends Component {
                             <ul className="pagination">
                                 {
                                     pages_arr.map((page) => (
-                                        <li className="page-item"><a className="page-link" onClick={() => this.handlePageChange(page)}>{page}</a></li>
+                                        <li className="page-item"><button className="page-link" onClick={() => this.handlePageChange(page)}>{page}</button></li>
                                     ))
                                 }
                             </ul>

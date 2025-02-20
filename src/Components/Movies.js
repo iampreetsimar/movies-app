@@ -120,7 +120,7 @@ export default class Movies extends Component {
                                         <div className='btn-wrapper'> 
                                             {
                                                 this.state.hover === m.id &&
-                                                <a className='btn btn-primary movie-btn' onClick={() => this.handleFav(m)}>{this.state.favs.includes(m.id) ? "Remove from " : "Add to "}Favorites</a>
+                                                <button className='btn btn-primary movie-btn' onClick={() => this.handleFav(m)}>{this.state.favs.includes(m.id) ? "Remove from " : "Add to "}Favorites</button>
                                             }
                                         </div>
                                         {/* </div> */}
@@ -131,13 +131,13 @@ export default class Movies extends Component {
                         <div style={{ display:'flex', justifyContent:'center' }}>
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination"> 
-                                    <li className="page-item"><a className="page-link" onClick={this.handlePrevious}>Previous</a></li>
+                                    <li className="page-item"><button className="page-link" onClick={this.handlePrevious}>Previous</button></li>
                                     {
                                         this.state.page_arr.map((page) => (
-                                            <li className="page-item"><a className="page-link" onClick={() => this.handlePage(page)}>{page}</a></li>
+                                            <li className="page-item"><button className="page-link" onClick={() => this.handlePage(page)}>{page}</button></li>
                                         ))
                                     }
-                                    <li className="page-item"><a className="page-link" onClick={this.handleNext}>Next</a></li>
+                                    <li className="page-item"><button className="page-link" onClick={this.handleNext}>Next</button></li>
                                 </ul>
                             </nav>
                         </div>
