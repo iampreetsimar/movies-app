@@ -1,7 +1,6 @@
 // import { movies } from './movies_data';
 import React, { Component } from 'react';
 import axios from 'axios';
-import { API_KEY } from  '../api_key';
 
 export default class Movies extends Component {
   constructor() {
@@ -21,9 +20,20 @@ export default class Movies extends Component {
   }
 
   changeMovies = async () => {
-    const getMoviesUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${this.state.curr_page}`;
-    const response = await axios.get(getMoviesUrl);
+
+    const options = {
+        method: 'GET',
+        url: 'https://api.themoviedb.org/3/movie/popular',
+        params: {language: 'en-US', page: `${this.state.curr_page}`},
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`
+        }
+    }
+    
+    const response = await axios.request(options);
     let data = response.data;
+    console.log(data);
     this.setState({
         movies: [...data.results]
     }, this.handleFavState)
