@@ -10,7 +10,8 @@ export default class Movies extends Component {
         hover: '',
         page_arr: [1],
         curr_page: 1,
-        movies: []
+        movies: [],
+        favs: []
     }
   }
 
@@ -70,6 +71,30 @@ export default class Movies extends Component {
         }, this.changeMovies)
     }
   }
+
+  handleFav = (movie) => {
+    let old_favs = JSON.parse(localStorage.getItem('fav_movies') || "[]");
+    if(this.state.favs.includes(movie.id)) {
+        old_favs = old_favs.filter((m) => m.id !== movie.id);
+    } else {
+        old_favs.push(movie);
+        
+    }
+
+    localStorage.setItem('fav_movies', JSON.stringify(old_favs));
+    console.log(old_favs);
+    this.handleFavState();
+  }
+
+  handleFavState = () => {
+    let old_favs = JSON.parse(localStorage.getItem('fav_movies') || "[]");
+    let temp = old_favs.map((m) => m.id);
+
+    this.setState({
+        favs : [...temp]
+    })
+
+  }
  
   render() {
     return (
@@ -94,7 +119,7 @@ export default class Movies extends Component {
                                         <div className='btn-wrapper'> 
                                             {
                                                 this.state.hover === m.id &&
-                                                <a className='btn btn-primary movie-btn'>Add to Favorites</a>
+                                                <a className='btn btn-primary movie-btn' onClick={() => this.handleFav(m)}>{this.state.favs.includes(m.id) ? "Remove from " : "Add to "}Favorites</a>
                                             }
                                         </div>
                                         {/* </div> */}
