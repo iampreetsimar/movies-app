@@ -26,7 +26,7 @@ export default class Movies extends Component {
     let data = response.data;
     this.setState({
         movies: [...data.results]
-    })
+    }, this.handleFavState)
   }
 
   handleNext = () => {
@@ -87,6 +87,7 @@ export default class Movies extends Component {
   }
 
   handleFavState = () => {
+    console.log("handling fav state");
     let old_favs = JSON.parse(localStorage.getItem('fav_movies') || "[]");
     let temp = old_favs.map((m) => m.id);
 
